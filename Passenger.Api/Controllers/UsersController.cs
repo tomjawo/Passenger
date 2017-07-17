@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Passenger.Infrastructure.Services;
 using Passenger.Infrastructure.DTO;
+using Passenger.Infrastructure.Commands.User;
 
 namespace Passenger.Api.Controllers
 {
@@ -18,13 +19,21 @@ namespace Passenger.Api.Controllers
             _userService = userservice;   
         }
 
-
         // GET api/values/5
         [HttpGet("{email}")]
-        public UserDto Get(string email)
+        public async  Task<UserDto> Get(string email)
         {
-            return _userService.Get(email);
-        }
+             return await _userService.GetAsync(email);
         
+        }
+
+
+        [HttpPost("")]
+        public async Task Post([FromBody]CreateUser command)
+        {
+            await _userService.RegisterAsync(command.Email, command.Username, command.Password);
+
+        }
+
     }
 }
